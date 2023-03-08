@@ -1,0 +1,23 @@
+{
+  "name": "nfs-override",
+  "version": "1.0.0",
+  "description": "A tool to simplify override od NFS components",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "override" : "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lab1les/nfs-override.git"
+  },
+  "keywords": [
+    "NFS"
+  ],
+  "author": "Labiles",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lab1les/nfs-override/issues"
+  },
+  "homepage": "https://github.com/Lab1les/nfs-override#readme"
+}
