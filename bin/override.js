@@ -1,9 +1,5 @@
-const fs = require('fs');
+const corePath = process.argv[2];
+const overrideComment = process.argv[3];
 
-const filePath = process.env.npm_config_filePath // file path;
-
-if(filePath){
-    console.log(filePath);
-    return;
-}
-console.log("no file path");
+console.log(corePath);
+console.log(overrideComment);
