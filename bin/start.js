@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 const { exec } = require("child_process");
-exec(`node ${__dirname}/index.js`, (error, stdout, stderr) => {
+exec(`node ${__dirname}/override.js`, (error, stdout, stderr) => {
     if (error) {
         console.log(`error: ${error.message}`);
         return;
