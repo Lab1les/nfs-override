@@ -8,12 +8,12 @@ const NFS_IMPORT_PATH = "@nfs/ecommerce-front-core/src/"
 const OVERRIDE_DESTINATION = `ecommerce-front-${process.env.LOCALE}/src`
 
 //vars
-const corePath = process.argv[2] || "ecommerce-front-it/node_modules/@nfs/src/components/Global/Commons/Accordion/Accordion.svelte";
+const corePath = process.argv[2];
 const coreFileName = corePath.split("/").pop();
 const itFileName = coreFileName.split(".").join(`.${process.env.LOCALE}.`);
 const destinationPath = `${OVERRIDE_DESTINATION}${corePath.split(PATH_SPLITTER)[1].replace(coreFileName, itFileName)}`;
-const overrideComment = process.argv[3] || "override comment";
-const jiraTask = process.argv[4] || "https://jiratsk.com";
+const overrideComment = process.argv[3];
+const jiraTask = process.argv[4];
 const jsonOverridePath = `${OVERRIDE_DESTINATION.split("/")[0]}/.migrate/override.json`;
 
 const copyFile = async (corePath,destinationPath) =>  await fs.promises.cp(corePath, destinationPath,{recursive: true});
@@ -91,7 +91,7 @@ const addOvverideComment = (overrideComment) =>
             destinationPath,
             overrideComment,
             jiraTask); 
-            
+
         console.log("\x1b[42m", `succesfully overrided ${coreFileName}!`)
     }
     catch(e){
