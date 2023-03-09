@@ -18,24 +18,18 @@ const jiraTask = process.argv[4];
 
 // add override to override.json
 const overrideJson = async () => {
-    const overrideTemplate = () => {
-        try {
-            return JSON.parse(
-                `{
-                    "path": "${PATH_SPLITTER}${corePath.split(PATH_SPLITTER)[1]}",
-                    "override": "${PATH_SPLITTER}${destinationPath.split(PATH_SPLITTER)[1]}",
-                    "reasons": [
-                            {
-                                "name": "${overrideComment}",
-                                ${jiraTask ? `"jira": "${jiraTask}"` : ""}
-                            }
-                        ]
-                }`)
-        } catch (error) {
-            return error
-        }
-    
-    };
+    const overrideTemplate = () => JSON.parse(
+    `{
+        "path": "${PATH_SPLITTER}${corePath.split(PATH_SPLITTER)[1]}",
+        "override": "${PATH_SPLITTER}${destinationPath.split(PATH_SPLITTER)[1]}",
+        "reasons": [
+                {
+                    "name": "${overrideComment}",
+                    ${jiraTask ? `"jira": "${jiraTask}"` : ""}
+                }
+            ]
+    }`);
+
     const jsonOverridePath = `${process.env.OVERRIDE_DESTINATION.split("/")[0]}/.migrate/override.json`;
     try{
         const jsonOverrideContent = await fs.promises.readFile(jsonOverridePath);
@@ -54,10 +48,12 @@ const overrideJson = async () => {
 const updateImport = async (overridedFile) =>{
     try{
         let fileContent = await fs.promises.readFile(overridedFile);
-        let result = fileContent.toString()
-        .replaceAll("from '@/", `from '${NFS_IMPORT_PATH}`) // set core import
-        .replaceAll("from './", `from '${NFS_IMPORT_PATH}${corePath.split(PATH_SPLITTER)[1].replace(coreFileName, "")}`) // set relative import to core import
-        .replaceAll("@import '.", `@import '${NFS_IMPORT_PATH}${corePath.split(PATH_SPLITTER)[1].replace(coreFileName, "")}`) // replace .less import
+        let result = addOvverideComment(
+            fileContent.toString()
+            .replaceAll("from '@/", `from '${NFS_IMPORT_PATH}`) // set core import
+            .replaceAll("from './", `from '${NFS_IMPORT_PATH}${corePath.split(PATH_SPLITTER)[1].replace(coreFileName, "")}`) // set relative import to core import
+            .replaceAll("@import '.", `@import '${NFS_IMPORT_PATH}${corePath.split(PATH_SPLITTER)[1].replace(coreFileName, "")}`) // replace .less import
+            )
         await fs.promises.writeFile(overridedFile, result);
         return true;
     }
@@ -68,8 +64,15 @@ const updateImport = async (overridedFile) =>{
 }   
 
 // add override comment to file
-const addOvverideComment = async (overridedFile) => {
-    // TODO
+const addOvverideComment = (fileContent) => {
+    const overrideCommentTemplate = 
+    `<script>
+      /**
+      * @Override
+      * ${overrideComment}
+    */
+    `;
+    return fileContent.replace("<script>", overrideCommentTemplate);
 }
 
 //start
