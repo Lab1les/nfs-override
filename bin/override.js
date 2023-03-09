@@ -84,7 +84,7 @@ const addOvverideComment = (overrideComment) =>
 (async () => {
     try{
         await copyFile(corePath, destinationPath); // copy file
-        await updateImport(destinationPath, overrideComment); // update import and add override comment
+        await updateImportAndComment(destinationPath, overrideComment); // update import and add override comment
         await updateOverrideJson( // add to override.json
             jsonOverridePath,
             corePath,
