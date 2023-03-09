@@ -4,7 +4,7 @@ var fs = require('fs');
 
 //const
 const PATH_SPLITTER = "src";
-const NFS_IMPORT_PATH = "@nfs/ecommerce-front-core/src/"
+const NFS_IMPORT_PATH = "@nfs/ecommerce-front-core/src"
 const OVERRIDE_DESTINATION = `ecommerce-front-${process.env.LOCALE}/src`
 
 //vars
@@ -57,12 +57,23 @@ const updateOverrideJson = async (jsonOverridePath,corePath,destinationPath,over
 // update import and add override comment to copied file
 const updateImportAndComment = async (destinationPath, overrideComment) =>{
     try{
-        let fileContent = await getFileContent(destinationPath);
+        const fileContent = await getFileContent(destinationPath);
         let updatedFileContent = fileContent.toString()
-            .replaceAll("from '@/", `from '${NFS_IMPORT_PATH}`) // set core import
-            .replaceAll("from './", `from '${NFS_IMPORT_PATH}${corePath.split(PATH_SPLITTER)[1].replace(coreFileName, "")}`) // set relative import to core import
-            .replaceAll("@import '.", `@import '${NFS_IMPORT_PATH}${corePath.split(PATH_SPLITTER)[1].replace(coreFileName, "")}`) // replace .less import
-            .replace("<script>", addOvverideComment(overrideComment));
+        .replace("<script>", addOvverideComment(overrideComment));
+
+        const allCoreImport = updatedFileContent.match(/from (?:'|")@\/.*(?:'|")/gm);
+        const allRelativeImport = updatedFileContent.match(/from (?:'|").\/.*(?:'|")/gm);  
+        const allCssImport = updatedFileContent.match(/@import (?:'|").*(?:'|")/gm);
+
+        allCoreImport.forEach(el => {
+            updatedFileContent = updatedFileContent.replace(el, el.replace("@/", `${NFS_IMPORT_PATH}/`));
+        })
+        allRelativeImport.forEach(el => {
+            updatedFileContent = updatedFileContent.replace(el, el.replace("./", `${NFS_IMPORT_PATH}${corePath.split(PATH_SPLITTER)[1].replace(coreFileName, "")}`));
+        })
+        allCssImport.forEach(el => {
+            updatedFileContent = updatedFileContent.replace(el, el.replace("./", `${NFS_IMPORT_PATH}${corePath.split(PATH_SPLITTER)[1].replace(coreFileName, "")}`));
+        })        
         await writeFileContent(destinationPath, updatedFileContent);
         return true;
     }
@@ -75,10 +86,10 @@ const updateImportAndComment = async (destinationPath, overrideComment) =>{
 // add override comment to file
 const addOvverideComment = (overrideComment) => 
     `<script>
-      /**
-      * @Override
-      * ${overrideComment}
-    */`;
+  /*
+   * @Override
+   * ${overrideComment}
+   */`;
 
 //start
 (async () => {
