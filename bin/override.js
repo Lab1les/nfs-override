@@ -5,7 +5,7 @@ var fs = require('fs');
 //const
 const PATH_SPLITTER = "src";
 const NFS_IMPORT_PATH = "@nfs/ecommerce-front-core/src"
-const OVERRIDE_DESTINATION = `ecommerce-front-${process.env.LOCALE}/src`
+const OVERRIDE_DESTINATION = `apps/ecommerce-front-${process.env.LOCALE}/src`
 
 //vars
 const corePath = process.argv[2];
