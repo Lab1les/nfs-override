@@ -5,13 +5,16 @@ A tool to simplify override of NFS components
 
 ⚠️ actually work **only** with **.svelte** file
 
-run:
+run
+
 ``git clone https://github.com/Lab1les/nfs-override.git``
 
-run:
+run
+
 ``npm install``
 
-This is a cli tool, to start it run:
+This is a cli tool, to start it run
+
 ``npm exec override``
 
 It will ask for:
